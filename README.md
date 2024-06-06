@@ -73,126 +73,6 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-## Démarrage des composants
-
-### Démarrer MLflow
-
-Pour suivre les expériences et visualiser les résultats des modèles :
-
-```bash
-mlflow ui
-```
-
-Accédez à `http://localhost:5000` pour voir l'interface MLflow.
-
-### Démarrer FastAPI
-
-Serveur backend pour gérer les requêtes :
-
-```bash
-uvicorn main:app --reload
-```
-
-Visitez `http://localhost:8000` pour l'API et `http://localhost:8000/docs` pour la documentation Swagger.
-
-### Démarrer Streamlit
-
-Interface utilisateur pour interagir avec le modèle :
-
-```bash
-streamlit run app.py
-```
-
-Ouvrez `http://localhost:8501` pour utiliser l'application Streamlit.
-
-## Entraînement du modèle
-
-Pour lancer une expérience de Machine Learning :
-
-```bash
-python3 train.py
-```
-
-Ce script configure, entraîne un modèle de Machine Learning et enregistre les résultats dans MLflow. Après exécution, vous pouvez visualiser les résultats dans l'interface MLflow.
-
-## Exemples de code pour chaque composant
-
-### Streamlit - Frontend
-
-```python
-import streamlit as st
-import requests
-
-st.title("Application de Machine Learning")
-if st.button('Obtenir prédiction'):
-    response = requests.get('http://localhost:8000/predict')
-    prediction = response.json()
-    st.write(f"Prédiction: {prediction['message']}")
-st.write("Ceci est une application Streamlit pour visualiser des modèles de Machine Learning.")
-```
-
-### FastAPI - Backend
-
-```python
-from fastapi import FastAPI
-import numpy as np
-import mlflow.pyfunc
-
-app = FastAPI()
-model_uri = "models:/monModele/Production"
-model = mlflow.pyfunc.load_model(model_uri)
-
-@app.get("/predict")
-def predict():
-    data = np.array([[5.1, 3.5, 1.4, 0.2]])
-    prediction = model.predict(data)
-    return {"message": str(prediction)}
-```
-
-### MLflow - MLOps
-
-```python
-# train.py
-
-import mlflow
-import mlflow.sklearn
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
-# Configuration de MLflow
-mlflow.set_experiment('my_ml_experiment')
-
-# Démarrer une nouvelle expérience MLflow
-with mlflow.start_run():
-    # Charger les données
-    X, y = load_iris(return_X_y=True)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-    
-    # Créer et entraîner le modèle
-    model = RandomForestClassifier(n_estimators=100)
-    model.fit(X_train, y_train)
-    
-    # Prédiction et évaluation du modèle
-    predictions = model.predict(X_test)
-    accuracy = accuracy_score(y_test, predictions)
-    
-    # Logger les paramètres, métriques et le modèle
-    mlflow.log_param("n_estimators", 100)
-    mlflow.log_metric("accuracy", accuracy)
-    mlflow.sklearn.log_model(model, "model")
-
-    print(f"Modèle entraîné avec une précision de : {accuracy * 100}%")
-
-```
-
-## Conclusion
-
-Ce guide vous aide à configurer et à utiliser une application de Machine Learning intégrée avec Streamlit, FastAPI, et MLflow pour le suivi des expérimentations. Profitez de cette configuration pour développer, tester et déployer des modèles de Machine Learning de manière efficace et interactive.
-
-
-
 ### Instructions de lancement - Utilisation (3 terminaux)
 - **Lancer MLflow** :
 ```sh
@@ -215,14 +95,9 @@ localhost:8501
 localhost:8000 et localhost:8000/docs
 localhost:5000
 ```
-Ces exemples améliorent l'interactivité et la fonctionnalité de chaque composant du projet, démontrant une intégration efficace entre le frontend, le backend, et les services MLOps pour une application de Machine Learning complète.
 
 
-# Annexe 
-
-Pour vous aider à configurer et exécuter votre projet de Machine Learning avec Streamlit, FastAPI, et MLflow sur un système Linux, je vais vous guider étape par étape. Nous utiliserons trois terminaux pour démarrer les trois composants principaux du projet.
-
-### Étape 1 : Installation et Configuration de l'Environnement
+# Annexe 1 - Installation et Configuration de l'Environnement
 
 1. **Ouvrez un terminal** et installez Python 3 et pip si ce n'est pas déjà fait :
    ```bash
@@ -232,7 +107,7 @@ Pour vous aider à configurer et exécuter votre projet de Machine Learning avec
 
 2. **Clonez le dépôt et configurez l'environnement virtuel** :
    ```bash
-   git clone https://github.com/hrhouma/demo1-mlflow.git
+   git clone https://github.com/hrhouma/demo2-mlflow.git
    cd demo1-mlflow
    python3 -m venv env
    source env/bin/activate
@@ -241,60 +116,34 @@ Pour vous aider à configurer et exécuter votre projet de Machine Learning avec
 
 ### Étape 2 : Démarrer les Composants
 
-Vous aurez besoin d'ouvrir trois terminaux pour démarrer chaque service :
-
-#### Terminal 1 : Démarrer MLflow
-
-1. **Activez l'environnement virtuel** si ce n'est pas déjà fait :
+1. **Entraîner le modèle**:
    ```bash
-   source env/bin/activate
+   python3 train_model.py
    ```
-   
-2. **Démarrer MLflow** :
+   Cette commande va entraîner votre modèle sur le dataset Iris, enregistrer le modèle dans MLflow, et configurer la gestion des versions du modèle dans le registre MLflow.
+
+2. **Lancer MLflow UI**:
    ```bash
    mlflow ui
    ```
+   Cette commande démarre l'interface utilisateur MLflow sur `http://127.0.0.1:5000`, où vous pouvez visualiser les détails des expériences, y compris les métriques et les versions du modèle.
 
-   - **URL pour MLflow** : Ouvrez un navigateur web et allez à `http://localhost:5000` pour accéder à l'interface MLflow.
-
-#### Terminal 2 : Démarrer FastAPI
-
-1. **Activez l'environnement virtuel** :
+3. **Démarrer le serveur FastAPI**:
    ```bash
-   source env/bin/activate
+   uvicorn app_fastapi:app --reload
    ```
-   
-2. **Démarrer FastAPI** :
+   Cette commande démarre le serveur FastAPI sur `http://127.0.0.1:8000`. Vous pouvez accéder à Swagger UI pour tester l'API à `http://127.0.0.1:8000/docs` et essayer l'endpoint `/predict` pour voir les prédictions en temps réel.
+
+4. **Exécuter l'application Streamlit**:
    ```bash
-   uvicorn main:app --reload
+   streamlit run ssp_streamlit.py
    ```
+   Lance l'application Streamlit qui se connecte au backend FastAPI pour obtenir des prédictions. L'interface utilisateur Streamlit sera disponible sur `http://localhost:8501`.
 
-   - **URL pour FastAPI** : Allez à `http://localhost:8000` pour voir l'API en action.
-   - **Documentation API** : Allez à `http://localhost:8000/docs` pour voir la documentation Swagger de l'API.
+### Actions et URL à visiter:
 
-#### Terminal 3 : Démarrer Streamlit
+- **MLflow UI**: Visitez `http://127.0.0.1:5000` pour visualiser les détails des runs et la gestion des modèles.
+- **API FastAPI**: Allez sur `http://127.0.0.1:8000` pour voir l'API en action. Utilisez `http://127.0.0.1:8000/docs` pour interagir avec Swagger UI et tester l'endpoint `/predict`.
+- **Streamlit UI**: Ouvrez `http://localhost:8501` et utilisez l'interface Streamlit pour obtenir des prédictions en cliquant sur le bouton prévu à cet effet.
 
-1. **Activez l'environnement virtuel** :
-   ```bash
-   source env/bin/activate
-   ```
-   
-2. **Démarrer Streamlit** :
-   ```bash
-   streamlit run app.py
-   ```
-
-   - **URL pour Streamlit** : Allez à `http://localhost:8501` pour utiliser l'interface Streamlit.
-
-### Étape 3 : Utilisation de l'Application
-
-- Utilisez l'interface Streamlit à `http://localhost:8501` pour interagir avec votre modèle. Cliquez sur le bouton 'Obtenir prédiction' pour envoyer une requête au modèle via FastAPI et afficher la prédiction.
-- Vérifiez les résultats de l'exécution du modèle et les métriques dans l'interface MLflow à `http://localhost:5000`.
-
-### Étape 4 : Lancer le script d'entraînement
-
-Si vous souhaitez entraîner le modèle et voir le suivi dans MLflow, exécutez dans un terminal :
-
-```bash
-python3 train.py
-```
+Assurez-vous que chaque service soit lancé dans un terminal distinct pour pouvoir les exécuter simultanément sans interruption.
