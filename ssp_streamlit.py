@@ -1,16 +1,12 @@
-# ssp_streamlit.py
-
 import streamlit as st
 import requests
 
-st.title("Application de Machine Learning Iris")
+st.title("Application de Machine Learning")
 
 if st.button('Obtenir prédiction'):
+    # Appel à l'API FastAPI pour obtenir une prédiction
     response = requests.get('http://localhost:8000/predict')
-    if response.status_code == 200:
-        prediction = response.json()['message']
-        st.write(f"Prédiction reçue : {prediction}")
-    else:
-        st.error("Erreur de connexion avec l'API.")
+    prediction = response.json()
+    st.write(f"Prédiction: {prediction['prediction']}")  # Affichage de la prédiction
 
-st.write("Cliquez sur le bouton pour obtenir une prédiction du modèle de Machine Learning.")
+st.write("Ceci est une application Streamlit pour visualiser des modèles de Machine Learning.")
