@@ -216,3 +216,85 @@ localhost:8000 et localhost:8000/docs
 localhost:5000
 ```
 Ces exemples améliorent l'interactivité et la fonctionnalité de chaque composant du projet, démontrant une intégration efficace entre le frontend, le backend, et les services MLOps pour une application de Machine Learning complète.
+
+
+# Annexe 
+
+Pour vous aider à configurer et exécuter votre projet de Machine Learning avec Streamlit, FastAPI, et MLflow sur un système Linux, je vais vous guider étape par étape. Nous utiliserons trois terminaux pour démarrer les trois composants principaux du projet.
+
+### Étape 1 : Installation et Configuration de l'Environnement
+
+1. **Ouvrez un terminal** et installez Python 3 et pip si ce n'est pas déjà fait :
+   ```bash
+   sudo apt update
+   sudo apt install python3 python3-pip
+   ```
+
+2. **Clonez le dépôt et configurez l'environnement virtuel** :
+   ```bash
+   git clone https://github.com/hrhouma/demo1-mlflow.git
+   cd demo1-mlflow
+   python3 -m venv env
+   source env/bin/activate
+   pip install -r requirements.txt
+   ```
+
+### Étape 2 : Démarrer les Composants
+
+Vous aurez besoin d'ouvrir trois terminaux pour démarrer chaque service :
+
+#### Terminal 1 : Démarrer MLflow
+
+1. **Activez l'environnement virtuel** si ce n'est pas déjà fait :
+   ```bash
+   source env/bin/activate
+   ```
+   
+2. **Démarrer MLflow** :
+   ```bash
+   mlflow ui
+   ```
+
+   - **URL pour MLflow** : Ouvrez un navigateur web et allez à `http://localhost:5000` pour accéder à l'interface MLflow.
+
+#### Terminal 2 : Démarrer FastAPI
+
+1. **Activez l'environnement virtuel** :
+   ```bash
+   source env/bin/activate
+   ```
+   
+2. **Démarrer FastAPI** :
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+   - **URL pour FastAPI** : Allez à `http://localhost:8000` pour voir l'API en action.
+   - **Documentation API** : Allez à `http://localhost:8000/docs` pour voir la documentation Swagger de l'API.
+
+#### Terminal 3 : Démarrer Streamlit
+
+1. **Activez l'environnement virtuel** :
+   ```bash
+   source env/bin/activate
+   ```
+   
+2. **Démarrer Streamlit** :
+   ```bash
+   streamlit run app.py
+   ```
+
+   - **URL pour Streamlit** : Allez à `http://localhost:8501` pour utiliser l'interface Streamlit.
+
+### Étape 3 : Utilisation de l'Application
+
+- Utilisez l'interface Streamlit à `http://localhost:8501` pour interagir avec votre modèle. Cliquez sur le bouton 'Obtenir prédiction' pour envoyer une requête au modèle via FastAPI et afficher la prédiction.
+- Vérifiez les résultats de l'exécution du modèle et les métriques dans l'interface MLflow à `http://localhost:5000`.
+
+### Étape 4 : Lancer le script d'entraînement
+
+Si vous souhaitez entraîner le modèle et voir le suivi dans MLflow, exécutez dans un terminal :
+
+```bash
+python3 train.py
+```
