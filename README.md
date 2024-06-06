@@ -6,9 +6,9 @@
 ```
 /demo1-mlflow
 │
-├── app.py              # Fichier pour l'application Streamlit (frontend)
+├── app_fastapi.py              # Fichier pour l'application Streamlit (frontend)
 ├── main.py             # Fichier pour l'API FastAPI (backend)
-├── train.py            # Script pour l'entraînement du modèle et le suivi MLflow
+├── train_model.py      # Script pour l'entraînement du modèle et le suivi MLflow
 │
 ├── requirements.txt    # Liste de toutes les dépendances Python nécessaires
 ├── .gitignore          # Fichier pour ignorer les fichiers/dossiers non souhaités dans Git
