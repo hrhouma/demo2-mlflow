@@ -2,6 +2,51 @@
 
 # Exemple d'architecture - Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
 
+
+```
+/demo1-mlflow
+│
+├── app.py              # Fichier pour l'application Streamlit (frontend)
+├── main.py             # Fichier pour l'API FastAPI (backend)
+├── train.py            # Script pour l'entraînement du modèle et le suivi MLflow
+│
+├── requirements.txt    # Liste de toutes les dépendances Python nécessaires
+├── .gitignore          # Fichier pour ignorer les fichiers/dossiers non souhaités dans Git
+│
+├── Dockerfile          # (Optionnel) Dockerfile pour la création de l'image Docker
+├── docker-compose.yml  # (Optionnel) Fichier pour la configuration de Docker Compose
+│
+├── README.md           # Documentation du projet
+│
+├── models              # Dossier pour stocker les modèles entraînés
+│   └── monModele       # Dossier pour un modèle spécifique
+│
+├── notebooks           # Dossier pour les Jupyter notebooks (si utilisés pour l'analyse)
+│
+├── data                # Dossier pour les jeux de données utilisés dans le projet
+│
+├── mlruns              # Dossier généré automatiquement par MLflow pour stocker les runs
+│
+├── scripts             # Dossier pour les scripts supplémentaires utilisés dans le projet
+│
+└── tests               # Dossier pour les tests unitaires et d'intégration
+```
+
+### Explications des composants clés :
+- **app.py** : Ce fichier contient le code pour l'interface utilisateur Streamlit. Il interagit avec le backend via des appels API et affiche les résultats des prédictions.
+- **main.py** : Ce fichier définit le backend utilisant FastAPI. Il expose des endpoints pour les opérations de Machine Learning et communique avec MLflow pour récupérer les modèles.
+- **train.py** : Script pour entraîner les modèles de Machine Learning et enregistrer les résultats dans MLflow.
+- **requirements.txt** : Contient toutes les bibliothèques Python nécessaires à l'installation pour que le projet fonctionne correctement.
+- **Dockerfile** et **docker-compose.yml** : Fournissent les configurations nécessaires pour dockeriser l'application, permettant une déploiement facile et une meilleure portabilité.
+- **README.md** : Documentation détaillée sur le projet, son installation, son utilisation et son architecture.
+- **models** : Dossier pour stocker les modèles MLflow enregistrés ou tout autre modèle de Machine Learning.
+- **notebooks** : Pour les analyses exploratoires de données ou tout autre traitement préliminaire des données avec Jupyter Notebooks.
+- **data** : Pour stocker les jeux de données utilisés dans vos expériences de Machine Learning.
+- **mlruns** : Répertoire généré par MLflow pour stocker les informations sur les différents runs et expériences.
+- **scripts** : Contient tout script supplémentaire qui pourrait être utilisé pour le prétraitement des données, des analyses supplémentaires, etc.
+- **tests** : Pour les tests unitaires et d'intégration qui garantissent la robustesse de votre code.
+
+
 # Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
 
 Ce projet démontre comment intégrer Streamlit, FastAPI et MLflow pour créer une application complète de Machine Learning. L'application permet d'interagir avec un modèle de Machine Learning via une interface utilisateur développée avec Streamlit, gère les requêtes API avec FastAPI et effectue le suivi des expériences avec MLflow.
