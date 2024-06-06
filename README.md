@@ -74,30 +74,8 @@ pip install -r requirements.txt
 ```
 
 ### Instructions de lancement - Utilisation (3 terminaux)
-- **Lancer MLflow** :
-```sh
-cd demo2-mlflow
-source mlflowenv1/bin/activate
-streamlit run app.py
-```
-```sh
-cd demo2-mlflow
-source mlflowenv1/bin/activate
-uvicorn main:app --reload
-```
-```sh
-cd demo1-mlflow
-source mlflowenv1/bin/activate
-mlflow ui
-```
-```sh
-localhost:8501
-localhost:8000 et localhost:8000/docs
-localhost:5000
-```
 
 
-# Annexe 1 - Installation et Configuration de l'Environnement
 
 1. **Ouvrez un terminal** et installez Python 3 et pip si ce n'est pas déjà fait :
    ```bash
@@ -114,8 +92,16 @@ localhost:5000
    pip install -r requirements.txt
    ```
 
-### Étape 2 : Démarrer les Composants
+# Étape 1 : Démarrer les Composants
 
+
+# TERMINAL 1
+```sh
+cd demo1-mlflow
+source mlflowenv1/bin/activate
+python3 train_model.py
+mlflow ui
+```
 1. **Entraîner le modèle**:
    ```bash
    python3 train_model.py
@@ -128,12 +114,28 @@ localhost:5000
    ```
    Cette commande démarre l'interface utilisateur MLflow sur `http://127.0.0.1:5000`, où vous pouvez visualiser les détails des expériences, y compris les métriques et les versions du modèle.
 
+
+# TERMINAL 2
+```sh
+cd demo2-mlflow
+source mlflowenv1/bin/activate
+uvicorn app_fastapi:app --reload
+```
 3. **Démarrer le serveur FastAPI**:
    ```bash
    uvicorn app_fastapi:app --reload
    ```
    Cette commande démarre le serveur FastAPI sur `http://127.0.0.1:8000`. Vous pouvez accéder à Swagger UI pour tester l'API à `http://127.0.0.1:8000/docs` et essayer l'endpoint `/predict` pour voir les prédictions en temps réel.
 
+
+
+# TERMINAL 3
+- **Lancer MLflow** :
+```sh
+cd demo2-mlflow
+source mlflowenv1/bin/activate
+streamlit run ssp_streamlit.py
+```
 4. **Exécuter l'application Streamlit**:
    ```bash
    streamlit run ssp_streamlit.py
@@ -146,4 +148,10 @@ localhost:5000
 - **API FastAPI**: Allez sur `http://127.0.0.1:8000` pour voir l'API en action. Utilisez `http://127.0.0.1:8000/docs` pour interagir avec Swagger UI et tester l'endpoint `/predict`.
 - **Streamlit UI**: Ouvrez `http://localhost:8501` et utilisez l'interface Streamlit pour obtenir des prédictions en cliquant sur le bouton prévu à cet effet.
 
+# Résumé des adresses
+```sh
+localhost:8501
+localhost:8000 et localhost:8000/docs
+localhost:5000
+```
 Assurez-vous que chaque service soit lancé dans un terminal distinct pour pouvoir les exécuter simultanément sans interruption.
