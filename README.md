@@ -1,8 +1,6 @@
 # demo2-mlflow
 
-Voici une version complète et améliorée du README pour votre projet de Machine Learning intégrant Streamlit, FastAPI, et MLflow. Cette version intègre des détails sur l'interaction entre les composants, les scripts à exécuter, ainsi que les instructions pour lancer et visualiser les résultats de l'expérience ML.
-
-### README.md - Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
+# Exemple d'architecture - Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
 
 # Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
 
