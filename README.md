@@ -66,8 +66,8 @@ Ce projet démontre comment intégrer Streamlit, FastAPI et MLflow pour créer u
 ## Installation
 
 ```bash
-git clone https://github.com/hrhouma/demo1-mlflow.git
-cd demo1-mlflow
+git clone https://github.com/hrhouma/demo2-mlflow.git
+cd demo2-mlflow
 python3 -m venv env
 source env/bin/activate
 pip install -r requirements.txt
