@@ -155,3 +155,135 @@ localhost:8000 et localhost:8000/docs
 localhost:5000
 ```
 Assurez-vous que chaque service soit lancé dans un terminal distinct pour pouvoir les exécuter simultanément sans interruption.
+
+# Annexe 1 - Code final
+
+
+### 1. Fichier FastAPI (`app_fastapi.py`)
+
+```python
+from fastapi import FastAPI
+import numpy as np
+import mlflow.pyfunc
+
+app = FastAPI()
+model_uri = "models:/Iris_Model/Production"
+model = mlflow.pyfunc.load_model(model_uri)
+
+@app.get("/predict")
+def predict():
+    # Exemple de prédiction avec des valeurs fixes
+    data = np.array([[5.1, 3.5, 1.4, 0.2]])
+    prediction = model.predict(data)
+    return {"prediction": prediction.tolist()}  # Convertir en liste pour la compatibilité JSON
+```
+
+### 2. Fichier Streamlit (`ssp_streamlit.py`)
+
+```python
+import streamlit as st
+import requests
+
+st.title("Application de Machine Learning")
+
+if st.button('Obtenir prédiction'):
+    # Appel à l'API FastAPI pour obtenir une prédiction
+    response = requests.get('http://localhost:8000/predict')
+    prediction = response.json()
+    st.write(f"Prédiction: {prediction['prediction']}")  # Affichage de la prédiction
+
+st.write("Ceci est une application Streamlit pour visualiser des modèles de Machine Learning.")
+```
+
+### 3. Script de formation et enregistrement du modèle (`train_model.py`)
+
+```python
+import mlflow
+import mlflow.sklearn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Configuration de MLflow pour utiliser une expérience spécifique
+mlflow.set_experiment('Iris_Model_Experiment')
+
+with mlflow.start_run():
+    X, y = load_iris(return_X_y=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    
+    model = RandomForestClassifier(n_estimators=100)
+    model.fit(X_train, y_train)
+    
+    predictions = model.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    
+    # Enregistrement des métriques, des paramètres et du modèle
+    mlflow.log_param("n_estimators", 100)
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.sklearn.log_model(model, "model", registered_model_name="Iris_Model")
+    
+    # Gestion des stages du modèle
+    client = mlflow.tracking.MlflowClient()
+    model_versions = client.search_model_versions(f"name='Iris_Model'")
+    for mv in model_versions:
+        if mv.current_stage == 'Production':
+            client.transition_model_version_stage(
+                name="Iris_Model",
+                version=mv.version,
+                stage="Archived"
+            )
+
+    client.transition_model_version_stage(
+        name="Iris_Model",
+        version=model_versions[0].version,
+        stage="Production"
+    )
+
+    print(f"Modèle entraîné avec une précision de : {accuracy * 100}%")
+```
+
+### Instructions pour l'exécution:
+1. **Exécuter le script de formation du modèle** (`train_model.py`) pour entraîner et enregistrer le modèle dans MLflow.
+2. **Démarrer le serveur FastAPI** avec `uvicorn app_fastapi:app --reload` pour servir le modèle.
+3. **Ouvrir l'application Streamlit** avec `streamlit run ssp_streamlit.py` pour interagir avec le modèle via l'interface utilisateur.
+
+Assurez-vous que tous les environnements et dépendances nécessaires sont correctement configurés avant de lancer les scripts.
+
+# Annexe 2 - Explications supplémeantaires : 
+- Si vous obtenez `"Prédiction: [0]"` ou une sortie similaire avec un "0", cela indique la prédiction faite par votre modèle de machine learning. Dans le contexte de l'exemple que nous avons utilisé, qui utilise le dataset Iris avec un modèle de RandomForestClassifier, ce "0" représente la classe prédite pour l'entrée donnée.
+
+Le dataset Iris comprend trois classes de fleurs iris:
+- Iris Setosa
+- Iris Versicolor
+- Iris Virginica
+
+Ces classes sont typiquement encodées en tant que 0, 1, et 2. Donc, une prédiction de "0" signifierait que le modèle prédit que l'échantillon entré appartient à la classe "Iris Setosa".
+
+### Pourquoi "[0]"?
+Le format "[0]" est une liste contenant un seul élément, qui est 0. Cela se produit parce que de nombreux modèles de scikit-learn, y compris RandomForestClassifier, retournent des prédictions sous forme de tableau numpy. Quand vous convertissez ce tableau en liste pour le rendre compatible JSON (comme dans votre API FastAPI), il apparaît sous forme de liste.
+
+Pour améliorer la clarté de l'interface utilisateur, vous pouvez modifier le code pour afficher un message plus descriptif en fonction de la prédiction, par exemple :
+
+```python
+# Modification dans app_fastapi.py pour inclure les noms des classes
+@app.get("/predict")
+def predict():
+    data = np.array([[5.1, 3.5, 1.4, 0.2]])
+    prediction = model.predict(data)
+    classes = ["Iris Setosa", "Iris Versicolor", "Iris Virginica"]  # Ajout des noms de classes
+    predicted_class = classes[prediction[0]]  # Obtention du nom de la classe prédite
+    return {"prediction": predicted_class}
+```
+
+Et ajustez votre application Streamlit pour traiter cette réponse :
+
+```python
+# Modification dans ssp_streamlit.py pour afficher le nom de la classe
+if st.button('Obtenir prédiction'):
+    response = requests.get('http://localhost:8000/predict')
+    prediction = response.json()
+    st.write(f"Prédiction: {prediction['prediction']}")
+```
+
+Ces modifications aideront à rendre les résultats plus compréhensibles pour les utilisateurs finaux en affichant directement le nom de la classe prédite au lieu de son encodage numérique.
