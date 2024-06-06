@@ -190,9 +190,6 @@ with mlflow.start_run():
 ## Conclusion
 
 Ce guide vous aide à configurer et à utiliser une application de Machine Learning intégrée avec Streamlit, FastAPI, et MLflow pour le suivi des expérimentations. Profitez de cette configuration pour développer, tester et déployer des modèles de Machine Learning de manière efficace et interactive.
-```
-
-Ce README fournit une documentation complète pour votre projet, incluant des instructions claires pour l'installation, le démarrage des composants, et l'exécution des scripts. Il offre également une vue d'ensemble claire sur l'architecture et le fonctionnement de votre application.
 
 
 
