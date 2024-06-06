@@ -4,7 +4,6 @@ Voici une version complète et améliorée du README pour votre projet de Machin
 
 ### README.md - Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
 
-```markdown
 # Projet de Machine Learning avec Streamlit, FastAPI, et MLflow
 
 Ce projet démontre comment intégrer Streamlit, FastAPI et MLflow pour créer une application complète de Machine Learning. L'application permet d'interagir avec un modèle de Machine Learning via une interface utilisateur développée avec Streamlit, gère les requêtes API avec FastAPI et effectue le suivi des expériences avec MLflow.
